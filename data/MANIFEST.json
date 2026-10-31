@@ -1,0 +1,5 @@
+{
+  "sumber": "https://… (tautan dataset dari kartu Kasus tim di Workbench)",
+  "berkas": ["data/latih.csv"],
+  "catatan": "Isi pada Sprint 0: versi/tanggal unduh, jumlah baris, dan perubahan (bila ada). Berkas data sendiri tidak di-commit."
+}
