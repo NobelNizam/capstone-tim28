@@ -1,0 +1,63 @@
+
+# Rencana eksperimen tim 28: Prakiraan konsumsi energi meja 15–60 menit ke depan
+# Label: Peramalan daya listrik berdasarkan riwayat daya, suhu, dan waktu
+# Metode: Program harian dengan aturan khusus Tim 28
+
+tim: 28
+judul: Prakiraan konsumsi energi meja 15–60 menit ke depan
+pembimbing: Christyan Tamaro Nadeak
+pilar: Mesin dan energi
+seed: 3030
+
+# Pengaturan program harian
+lampu_jam:
+  - 7
+  - 18
+
+kipas_ambang_suhu: 28.5
+
+pompa_setiap_menit: 90
+
+buzzer_jam: 12
+
+# Pengaturan perekaman
+rekam:
+  audio:
+    aktif: true
+    laju_sampel: 16000
+    mode: kontinu
+  kamera:
+    aktif: true
+    interval_detik: 10
+    lebar: 1280
+    tinggi: 720
+  sensor:
+    daya: true
+    lingkungan: true
+    imu: true
+    digital: true
+
+metode:
+  jenis_tugas: Peramalan daya listrik 15, 30, dan 60 menit ke depan
+  masukan_model: Daya per menit + suhu + jam, selama 120 menit terakhir
+  target:
+    - Daya 15 menit ke depan
+    - Daya 30 menit ke depan
+    - Daya 60 menit ke depan
+  sumber_label: Daya dihitung dari arus total × tegangan pada daya.csv dan diagregasi per menit
+  satuan_pemisahan: Hari
+  data_uji:
+    - Hari terakhir rekaman program harian
+    - Sesi program harian dengan aturan khusus Tim 28
+  metrik_utama:
+    - MAE
+    - Perbandingan MAE dengan model persistensi
+  jalur:
+    - CNN
+    - RNN
+    - Transformer
+    - AE
+  pembanding_non_dl:
+    - Persistensi
+    - Rata-rata musiman per jam
+  catatan_metode: AE digunakan sebagai penyandi fitur untuk peramal. Data masukan menggunakan 120 menit terakhir untuk memprediksi daya 15, 30, dan 60 menit ke depan. Evaluasi utama menggunakan data meja, sedangkan data sekunder hanya digunakan sebagai pelengkap atau pralatih.
