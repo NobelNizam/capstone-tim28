@@ -62,7 +62,7 @@ def data_simulasi(seed: int, panjang: int = 120, ke_depan: int = 15):
 # ---------------------------------------------------------------------------
 # 2. MODEL RNN
 # ---------------------------------------------------------------------------
-def buat_model(n_fitur: int):
+def buat_model(n_fitur: int, n_keluar: int = 1):
     import torch.nn as nn
 
     class ModelRNN(nn.Module):
@@ -71,12 +71,14 @@ def buat_model(n_fitur: int):
             # LSTM membaca 120 menit satu per satu sambil "mengingat" polanya
             self.lstm = nn.LSTM(n_fitur, UKURAN_TERSEMBUNYI, batch_first=True)
             self.dropout = nn.Dropout(DROPOUT)
-            # Ingatan terakhir LSTM diubah menjadi 1 angka: tebakan daya
-            self.keluar = nn.Linear(UKURAN_TERSEMBUNYI, 1)
+            # Ingatan terakhir LSTM diubah menjadi n_keluar angka
+            # (4 horizon: +15/+30/+45/+60 menit untuk data suhu)
+            self.keluar = nn.Linear(UKURAN_TERSEMBUNYI, n_keluar)
 
         def forward(self, x):                 # x: (batch, 120, n_fitur)
             _, (h, _) = self.lstm(x)          # h[-1]: ingatan setelah membaca menit ke-120
-            return self.keluar(self.dropout(h[-1])).squeeze(-1)
+            out = self.keluar(self.dropout(h[-1]))
+            return out.squeeze(-1) if n_keluar == 1 else out
 
     return ModelRNN()
 
@@ -84,6 +86,12 @@ def buat_model(n_fitur: int):
 # ---------------------------------------------------------------------------
 # 3. LATIH DAN PREDIKSI
 # ---------------------------------------------------------------------------
+def urut(X):
+    """Data meja (N, kanal, menit) -> (N, menit, kanal) untuk LSTM."""
+    X = np.asarray(X, np.float32)
+    return X.transpose(0, 2, 1) if X.ndim == 3 and X.shape[1] < X.shape[2] else X
+    
+    
 def latih_dan_prediksi(seed: int, final: bool, simulasi: bool):
     """Kembalikan (pred_val, pred_test|None, y_val, X_val)."""
     import torch
@@ -94,19 +102,22 @@ def latih_dan_prediksi(seed: int, final: bool, simulasi: bool):
         Xtr, ytr, Xva, yva, Xte, _ = data_simulasi(seed)
     else:
         Xtr, ytr, Xva, yva, Xte, _ = data.muat()
-    Xtr, Xva = np.asarray(Xtr, np.float32), np.asarray(Xva, np.float32)
+        
+
+    Xtr, Xva = urut(Xtr), urut(Xva)
+    Xte = urut(Xte) if Xte is not None else None
     ytr = np.asarray(ytr, np.float32)
 
     # Normalisasi: rata-rata dan simpangan baku dihitung dari data LATIH saja
     # (aturan kasus tim: "normalisasi dari data latih saja")
     rx, sx = Xtr.mean(axis=(0, 1)), Xtr.std(axis=(0, 1)) + 1e-8
-    ry, sy = ytr.mean(), ytr.std() + 1e-8
+    ry, sy = ytr.mean(axis=0), ytr.std(axis=0) + 1e-8
 
     def ke_tensor(X):
         return torch.tensor((np.asarray(X, np.float32) - rx) / sx)
 
     X, y = ke_tensor(Xtr), torch.tensor((ytr - ry) / sy)
-    model = buat_model(X.shape[2])
+    model = buat_model(X.shape[2], 1 if ytr.ndim == 1 else ytr.shape[1])
     # Adam: menyesuaikan langkah belajar tiap bobot sendiri, biasanya stabil untuk LSTM
     opt = torch.optim.Adam(model.parameters(), lr=LAJU_BELAJAR)
     fungsi_rugi = torch.nn.L1Loss()   # L1 = MAE, sama dengan metrik utama kasus
