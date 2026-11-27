@@ -3,104 +3,61 @@
 **Nama:** Efi Defiyati  
 **NIM:** 123450005  
 **Tim:** 28  
-**Judul:** Prakiraan Konsumsi Energi Meja 15–60 Menit ke Depan  
-**Jalur Model:** Transfer Learning (TL)
+**Judul:** Prakiraan Suhu Ruang Meja 15–60 Menit ke Depan (adaptasi dari prakiraan energi)  
+**Jalur Model:** Transfer Learning (`tl`) + Autoencoder penyandi fitur
 
-## 1. Tujuan Model
+## 1. Tujuan & Penyesuaian Protokol
 
-Model dikembangkan untuk memperkirakan konsumsi daya meja pada 15, 30, dan 60 menit ke depan berdasarkan data historis selama 120 menit. Fitur masukan terdiri atas daya, suhu, dan jam.
+Model meramalkan perubahan suhu ruang meja pada 4 horizon (`+15`, `+30`, `+45`, dan `+60` menit) dari riwayat 120 menit terakhir (`6` kanal protokol tim: `suhu_rel`, `cahaya_log_rel`, `daya_rel`, `tegangan_rel`, `jam_sin`, `jam_cos`).
 
-Pendekatan yang digunakan menggabungkan Transfer Learning dengan Autoencoder sebagai penyandi fitur untuk menghasilkan representasi laten yang digunakan dalam proses regresi.
+Pendekatan menggabungkan **Transfer Learning** (ResNet-18 pralatih ImageNet) dengan **Autoencoder** sebagai penyandi fitur untuk menghasilkan representasi laten sebelum kepala regresi.
 
 ## 2. Arsitektur Model
 
-Arsitektur terdiri atas tiga komponen utama:
+1. **Representasi GASF 2×3 kanal:** Enam kanal masukan `(N, 6, 120)` dipecah menjadi dua kelompok 3-kanal (`[:3]` dan `[3:]`), masing-masing diubah menjadi citra Gramian Angular Summation Field (GASF) berukuran `224 × 224` dan dinormalisasi sesuai statistik ImageNet.
+2. **ResNet-18 pralatih (beku):** Mengekstrak fitur `512` dimensi dari masing-masing kelompok citra → gabungan `1024` fitur. Seluruh parameter backbone dibekukan (`requires_grad=False`, mode `eval`).
+3. **Autoencoder (`PenyandiAE`):** `1024 → 256 → 128` (encoder) dan `128 → 256 → 1024` (decoder), dilatih terlebih dahulu untuk merekonstruksi fitur ResNet-18 dengan MSE.
+4. **Kepala Regresi:** `128 → 64 → 4` dengan `Dropout(0.2)`, dilatih bersama encoder AE untuk memprediksi 4 horizon sekaligus.
 
-1. **ResNet-18 pralatih:** Menggunakan bobot pralatih ImageNet sebagai ekstraktor fitur. Parameter backbone dibekukan agar proses pelatihan lebih ringan.
-2. **Autoencoder:** Mempelajari representasi laten dari fitur yang dihasilkan ResNet-18. Encoder memetakan 512 fitur menjadi 128 fitur laten, sedangkan decoder merekonstruksi kembali 512 fitur.
-3. **Regressor:** Menggunakan representasi laten dari encoder untuk menghasilkan tiga nilai prediksi konsumsi daya pada horizon 15, 30, dan 60 menit.
+## 3. Alasan Optimizer & Regularisasi
 
-## 3. Prapemrosesan Data
+- **Optimizer (`AdamW` + `CosineAnnealingLR`):** Menyesuaikan laju belajar adaptif per parameter pada lapisan linear serta menurunkan learning rate secara halus sepanjang epoch agar konvergen stabil pada dataset kecil (`566` titik latih).
+- **Loss Regresi (`L1Loss` pada target terstandar):** Selaras langsung dengan metrik utama tim (MAE).
+- **Regularisasi:** Backbone ResNet-18 dibekukan, `Dropout(0.2)` pada kepala regresi, `weight_decay = 1e-4`, dan pemilihan bobot pada epoch dengan `val_mae` terbaik (epoch ke-3 pada seed 1).
 
-Tahapan prapemrosesan yang diterapkan meliputi:
-
-1. Memastikan masukan memiliki bentuk `(N, 120, 3)`.
-2. Melakukan normalisasi fitur berdasarkan rata-rata dan standar deviasi data latih.
-3. Mengubah deret waktu menjadi representasi citra menggunakan Gramian Angular Summation Field (GASF).
-4. Menyesuaikan ukuran representasi menjadi 224 × 224 piksel.
-5. Melakukan normalisasi menggunakan statistik ImageNet sebelum masukan diberikan ke ResNet-18.
-
-Statistik normalisasi fitur dihitung dari data latih dan digunakan kembali pada data validasi maupun data uji.
-
-## 4. Tahapan Pelatihan
-
-Pelatihan dilakukan melalui dua tahap.
-
-**Tahap pertama: Pelatihan Autoencoder**
-
-Autoencoder dilatih untuk merekonstruksi fitur hasil ekstraksi ResNet-18. Fungsi kerugian yang digunakan adalah Mean Squared Error (MSE).
-
-**Tahap kedua: Pelatihan Regresi**
-
-Encoder Autoencoder dan kepala regresi dilatih menggunakan target konsumsi daya. ResNet-18 tetap dibekukan selama tahap pelatihan.
-
-## 5. Hyperparameter
+## 4. Ringkasan Hyperparameter
 
 | Parameter | Nilai |
 |---|---:|
-| Panjang input | 120 langkah |
-| Jumlah fitur input | 3 |
-| Jumlah target | 3 |
-| Backbone | ResNet-18 |
-| Bobot pralatih | ImageNet |
-| Dimensi fitur ResNet | 512 |
+| Bentuk input | `(N, 6, 120)` |
+| Bentuk target | `(N, 4)` (`+15, +30, +45, +60` menit) |
+| Backbone | ResNet-18 (`ResNet18_Weights.DEFAULT`, beku) |
+| Dimensi fitur ResNet (2 grup) | 1024 |
 | Dimensi laten AE | 128 |
-| Hidden layer AE | 256 |
-| Hidden layer regresi | 64 |
-| Batch size AE | 64 |
-| Batch size regresi | 32 |
-| Epoch AE | 20 |
-| Epoch regresi | 30 |
-| Optimizer | Adam |
-| Learning rate AE | 0,001 |
-| Learning rate regresi | 0,001 |
-| Weight decay | 0,00001 |
-| Dropout | 0,2 |
-| Fungsi kerugian | MSE |
-| Seed pengujian awal | 1 |
+| Batch size AE / regresi | 64 / 32 |
+| Epoch AE / regresi | 20 / 25 |
+| Learning rate | `1e-3` (`CosineAnnealingLR`) |
+| Weight decay | `1e-4` |
+| Dropout | `0.2` |
+| Loss AE / regresi | MSE / L1Loss (target terstandar) |
 
-## 6. Evaluasi Model
+## 5. Hasil Sprint 1 (Seed 1)
 
-Evaluasi dilakukan menggunakan evaluator resmi repositori melalui `src.common.evaluate`.
+### Uji Kerangka Data Simulasi (`--simulasi --seed 1`)
+- `val_mae_rata`: `0,3572 °C` vs persistensi `0,3707 °C` (`skill = +0,0364`), durasi `46,9 s`.
 
-Metrik untuk tugas regresi meliputi:
+### Uji Data Primer Meja (`--seed 1`)
+- **`data_hash`**: `83cb911ea1c23c1b80c3bcca11493efb` (cocok dengan `MANIFEST.json`).
+- **Epoch terbaik**: `3` dari `25` (validasi mulai naik setelah epoch 3 akibat keterbatasan jumlah kejadian pagi hari kerja pada data latih).
+- **Durasi**: `66,1 detik` (CPU laptop), parameter terlatih `600.004` (total `11.776.516`), latensi inferensi `95,93 ms`.
 
-- RMSE (Root Mean Squared Error).
-- MAE (Mean Absolute Error).
-- R² (Koefisien Determinasi).
+| Model | MAE rata-rata (°C) | RMSE (°C) | +15 m | +30 m | +45 m | +60 m | Skill vs persistensi | MAE titik berubah |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| **Persistensi / non-DL terpilih** | **0,4765** | 1,2371 | 0,2350 | 0,3981 | 0,5535 | 0,7194 | 0,000 | 2,0062 |
+| **TL + AE (`123450005`)** | **0,4989** | **1,2255** | 0,2411 | 0,3974 | 0,5754 | 0,7817 | -0,047 | **1,9894** |
+| Baseline starter (ridge) | 2,9942 | 7,6699 | 1,39 | 2,39 | 3,85 | 4,34 | -5,28 | 5,60 |
 
-Pengujian normal menggunakan data latih dan validasi. Data uji hanya digunakan pada tahap akhir sesuai ketentuan evaluasi tim.
+## 6. Rencana Sprint 2
 
-## 7. Status Eksperimen
-
-| Aktivitas | Status |
-|---|---|
-| Penyusunan arsitektur model | Selesai |
-| Implementasi ResNet-18 | Selesai |
-| Implementasi Autoencoder | Selesai |
-| Implementasi kepala regresi | Selesai |
-| Implementasi normalisasi | Selesai |
-| Integrasi pemanggilan evaluator | Selesai |
-| Pemeriksaan sintaks | Menunggu pengujian |
-| Pengujian menggunakan data simulasi | Belum dilakukan |
-| Pengujian menggunakan data meja | Menunggu ketersediaan data |
-| Pencatatan hasil evaluasi | Menunggu pengujian |
-| Ablation study | Belum dilakukan |
-
-## 8. Catatan Pengembangan
-
-Implementasi model masih memerlukan pengujian menggunakan data simulasi untuk memastikan kesesuaian dimensi masukan dan keluaran serta keberhasilan proses pelatihan.
-
-Pengujian menggunakan data meja dilakukan setelah dataset tersedia dan pemuat data pada protokol tim selesai diimplementasikan.
-
-Pencarian hyperparameter dan ablation study akan dicatat setelah eksperimen dilakukan. Hasil evaluasi tidak dicantumkan sebelum proses pengujian selesai.
+- Pencarian hyperparameter dan minimal 2 *ablation study* (mis. perbandingan tanpa AE vs dengan AE, variasi ukuran laten/dropout, serta fine-tuning parsial vs beku penuh).
+- Menjalankan 3 seed penuh (`--seeds 1 2 3`) pada konfigurasi akhir setelah penambahan data pagi hari kerja.
