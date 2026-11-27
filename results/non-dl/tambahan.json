@@ -1,0 +1,72 @@
+{
+  "jalur": "non-dl",
+  "seed": 1,
+  "dipilih": "persistensi",
+  "calon": {
+    "persistensi": {
+      "val_mae_rata": 0.4765,
+      "val_mae_rinci": {
+        "+15 menit": 0.235,
+        "+30 menit": 0.3981,
+        "+45 menit": 0.5535,
+        "+60 menit": 0.7194
+      },
+      "val_mae_persistensi": 0.4765,
+      "val_skill": 0.0,
+      "val_mae_berubah": 2.0062,
+      "val_mae_persistensi_berubah": 2.0062,
+      "val_n_berubah": 80
+    },
+    "musiman": {
+      "val_mae_rata": 1.2831,
+      "val_mae_rinci": {
+        "+15 menit": 1.131,
+        "+30 menit": 1.2265,
+        "+45 menit": 1.3214,
+        "+60 menit": 1.4538
+      },
+      "val_mae_persistensi": 0.4765,
+      "val_skill": -1.6929,
+      "val_mae_berubah": 2.3286,
+      "val_mae_persistensi_berubah": 2.0062,
+      "val_n_berubah": 80
+    },
+    "persistensi_musiman": {
+      "val_mae_rata": 0.6743,
+      "val_mae_rinci": {
+        "+15 menit": 0.3837,
+        "+30 menit": 0.5907,
+        "+45 menit": 0.7615,
+        "+60 menit": 0.9615
+      },
+      "val_mae_persistensi": 0.4765,
+      "val_skill": -0.4152,
+      "val_mae_berubah": 1.9579,
+      "val_mae_persistensi_berubah": 2.0062,
+      "val_n_berubah": 80
+    }
+  },
+  "jam_musiman_latih": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "val_mae_rata": 0.4765,
+  "val_mae_rinci": {
+    "+15 menit": 0.235,
+    "+30 menit": 0.3981,
+    "+45 menit": 0.5535,
+    "+60 menit": 0.7194
+  },
+  "val_mae_persistensi": 0.4765,
+  "val_skill": 0.0,
+  "val_mae_berubah": 2.0062,
+  "val_mae_persistensi_berubah": 2.0062,
+  "val_n_berubah": 80
+}
