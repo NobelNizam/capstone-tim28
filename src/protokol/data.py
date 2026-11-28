@@ -15,8 +15,8 @@ Keputusan protokol (rinciannya di PROTOKOL.md):
 - Satu contoh = titik awal t: masukan menit t−119..t ([6, 120]), target = **perubahan** suhu dari menit t ke t+15,
   t+30, t+45, t+60 → y [4] (°C; prakiraan suhu = suhu(t) + y, galatnya sama). Empat kanal fisik (suhu, log cahaya,
   daya, tegangan) dinyatakan **relatif terhadap nilainya di menit t**, ditambah sin/cos jam WIB. Alasannya:
-  tingkat absolut berbeda per blok (kipas menyala sepanjang blok validasi, hampir tidak pernah di latih); target
-  dan masukan absolut membuat jalur DL menghafal tingkat blok (PROTOKOL.md).
+  tingkat absolut berbeda per blok (kipas menyala sepanjang blok validasi, hampir tidak pernah di latih); putaran
+  pertama dengan target dan masukan absolut membuat jalur DL menghafal "kipas nyala ⇒ 25 °C" (PROTOKOL.md).
   Persistensi = meramal perubahan 0. ``KODEK = KodekRegresiVektor``.
 - Satuan pemisahan = **blok rekaman** (rentang bersambung ≥ 3 jam), menurut waktu: latih = tiga blok harian terlama,
   validasi = blok harian terbaru (19-11 pagi), uji = sesi tim sendiri (19-11 malam), sesuai kasus tim ("slot sendiri
