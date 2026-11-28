@@ -1,0 +1,66 @@
+{
+  "persistensi": {
+    "val_mae_rata": 0.4765,
+    "val_mae_rinci": {
+      "+15 menit": 0.235,
+      "+30 menit": 0.3981,
+      "+45 menit": 0.5535,
+      "+60 menit": 0.7194
+    },
+    "val_mae_persistensi": 0.4765,
+    "val_skill": 0.0,
+    "val_mae_berubah": 2.0062,
+    "val_mae_persistensi_berubah": 2.0062,
+    "val_n_berubah": 80,
+    "mae_pagi": 1.223,
+    "mae_malam": 0.0583
+  },
+  "123450005": {
+    "val_mae_rata": 0.4989,
+    "val_mae_rinci": {
+      "+15 menit": 0.2411,
+      "+30 menit": 0.3974,
+      "+45 menit": 0.5754,
+      "+60 menit": 0.7817
+    },
+    "val_mae_persistensi": 0.4765,
+    "val_skill": -0.047,
+    "val_mae_berubah": 1.9894,
+    "val_mae_persistensi_berubah": 2.0062,
+    "val_n_berubah": 80,
+    "mae_pagi": 1.2483,
+    "mae_malam": 0.0791
+  },
+  "baseline": {
+    "val_mae_rata": 2.9942,
+    "val_mae_rinci": {
+      "+15 menit": 1.3948,
+      "+30 menit": 2.3871,
+      "+45 menit": 3.8525,
+      "+60 menit": 4.3423
+    },
+    "val_mae_persistensi": 0.4765,
+    "val_skill": -5.2837,
+    "val_mae_berubah": 5.5959,
+    "val_mae_persistensi_berubah": 2.0062,
+    "val_n_berubah": 80,
+    "mae_pagi": 7.6904,
+    "mae_malam": 0.3635
+  },
+  "non-dl": {
+    "val_mae_rata": 0.4765,
+    "val_mae_rinci": {
+      "+15 menit": 0.235,
+      "+30 menit": 0.3981,
+      "+45 menit": 0.5535,
+      "+60 menit": 0.7194
+    },
+    "val_mae_persistensi": 0.4765,
+    "val_skill": 0.0,
+    "val_mae_berubah": 2.0062,
+    "val_mae_persistensi_berubah": 2.0062,
+    "val_n_berubah": 80,
+    "mae_pagi": 1.223,
+    "mae_malam": 0.0583
+  }
+}
