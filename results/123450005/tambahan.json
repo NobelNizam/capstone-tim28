@@ -14,7 +14,7 @@
   },
   "parameter": 600004,
   "parameter_total": 11776516,
-  "latensi_ms": 102.24,
+  "latensi_ms": 78.48,
   "epoch_terbaik": 3,
   "riwayat_ae": [
     {
@@ -43,11 +43,11 @@
     },
     {
       "epoch": 7,
-      "loss_ae": 0.195032
+      "loss_ae": 0.195031
     },
     {
       "epoch": 8,
-      "loss_ae": 0.179151
+      "loss_ae": 0.179152
     },
     {
       "epoch": 9,
@@ -55,186 +55,186 @@
     },
     {
       "epoch": 10,
-      "loss_ae": 0.129607
+      "loss_ae": 0.129606
     },
     {
       "epoch": 11,
-      "loss_ae": 0.107602
+      "loss_ae": 0.107598
     },
     {
       "epoch": 12,
-      "loss_ae": 0.093039
+      "loss_ae": 0.093037
     },
     {
       "epoch": 13,
-      "loss_ae": 0.085055
+      "loss_ae": 0.085048
     },
     {
       "epoch": 14,
-      "loss_ae": 0.0796
+      "loss_ae": 0.079593
     },
     {
       "epoch": 15,
-      "loss_ae": 0.075508
+      "loss_ae": 0.075492
     },
     {
       "epoch": 16,
-      "loss_ae": 0.072276
+      "loss_ae": 0.072248
     },
     {
       "epoch": 17,
-      "loss_ae": 0.069394
+      "loss_ae": 0.069365
     },
     {
       "epoch": 18,
-      "loss_ae": 0.066161
+      "loss_ae": 0.066109
     },
     {
       "epoch": 19,
-      "loss_ae": 0.062354
+      "loss_ae": 0.062323
     },
     {
       "epoch": 20,
-      "loss_ae": 0.058487
+      "loss_ae": 0.05848
     }
   ],
   "riwayat": [
     {
       "epoch": 1,
-      "loss_latih": 0.511238,
-      "val_mae": 0.5181
+      "loss_latih": 0.513776,
+      "val_mae": 0.5266
     },
     {
       "epoch": 2,
-      "loss_latih": 0.384718,
-      "val_mae": 0.5111
+      "loss_latih": 0.384012,
+      "val_mae": 0.5257
     },
     {
       "epoch": 3,
-      "loss_latih": 0.36866,
-      "val_mae": 0.4979
+      "loss_latih": 0.365737,
+      "val_mae": 0.4989
     },
     {
       "epoch": 4,
-      "loss_latih": 0.352143,
-      "val_mae": 0.5
+      "loss_latih": 0.341254,
+      "val_mae": 0.5168
     },
     {
       "epoch": 5,
-      "loss_latih": 0.322852,
-      "val_mae": 0.5103
+      "loss_latih": 0.299998,
+      "val_mae": 0.5355
     },
     {
       "epoch": 6,
-      "loss_latih": 0.264855,
-      "val_mae": 0.5384
+      "loss_latih": 0.257785,
+      "val_mae": 0.5621
     },
     {
       "epoch": 7,
-      "loss_latih": 0.232304,
-      "val_mae": 0.541
+      "loss_latih": 0.2245,
+      "val_mae": 0.5652
     },
     {
       "epoch": 8,
-      "loss_latih": 0.210652,
-      "val_mae": 0.5713
+      "loss_latih": 0.215152,
+      "val_mae": 0.5516
     },
     {
       "epoch": 9,
-      "loss_latih": 0.19548,
-      "val_mae": 0.5788
+      "loss_latih": 0.197407,
+      "val_mae": 0.5578
     },
     {
       "epoch": 10,
-      "loss_latih": 0.190583,
-      "val_mae": 0.5393
+      "loss_latih": 0.197594,
+      "val_mae": 0.5264
     },
     {
       "epoch": 11,
-      "loss_latih": 0.185036,
-      "val_mae": 0.5617
+      "loss_latih": 0.189369,
+      "val_mae": 0.5604
     },
     {
       "epoch": 12,
-      "loss_latih": 0.176589,
-      "val_mae": 0.5357
+      "loss_latih": 0.181415,
+      "val_mae": 0.5367
     },
     {
       "epoch": 13,
-      "loss_latih": 0.17448,
-      "val_mae": 0.5307
+      "loss_latih": 0.17982,
+      "val_mae": 0.5487
     },
     {
       "epoch": 14,
-      "loss_latih": 0.177982,
-      "val_mae": 0.5452
+      "loss_latih": 0.187583,
+      "val_mae": 0.5342
     },
     {
       "epoch": 15,
-      "loss_latih": 0.165404,
-      "val_mae": 0.5278
+      "loss_latih": 0.171616,
+      "val_mae": 0.5218
     },
     {
       "epoch": 16,
-      "loss_latih": 0.156946,
-      "val_mae": 0.5488
+      "loss_latih": 0.167316,
+      "val_mae": 0.5431
     },
     {
       "epoch": 17,
-      "loss_latih": 0.158182,
-      "val_mae": 0.5217
+      "loss_latih": 0.169317,
+      "val_mae": 0.528
     },
     {
       "epoch": 18,
-      "loss_latih": 0.155963,
-      "val_mae": 0.5329
+      "loss_latih": 0.162882,
+      "val_mae": 0.5352
     },
     {
       "epoch": 19,
-      "loss_latih": 0.154799,
-      "val_mae": 0.5416
+      "loss_latih": 0.167089,
+      "val_mae": 0.5436
     },
     {
       "epoch": 20,
-      "loss_latih": 0.146114,
-      "val_mae": 0.5415
+      "loss_latih": 0.160177,
+      "val_mae": 0.5368
     },
     {
       "epoch": 21,
-      "loss_latih": 0.152185,
-      "val_mae": 0.5265
+      "loss_latih": 0.16419,
+      "val_mae": 0.5228
     },
     {
       "epoch": 22,
-      "loss_latih": 0.152331,
-      "val_mae": 0.5438
+      "loss_latih": 0.164182,
+      "val_mae": 0.5388
     },
     {
       "epoch": 23,
-      "loss_latih": 0.142216,
-      "val_mae": 0.5379
+      "loss_latih": 0.155492,
+      "val_mae": 0.538
     },
     {
       "epoch": 24,
-      "loss_latih": 0.146663,
-      "val_mae": 0.5392
+      "loss_latih": 0.158305,
+      "val_mae": 0.5372
     },
     {
       "epoch": 25,
-      "loss_latih": 0.14402,
-      "val_mae": 0.5392
+      "loss_latih": 0.158777,
+      "val_mae": 0.537
     }
   ],
-  "val_mae_rata": 0.4979,
+  "val_mae_rata": 0.4989,
   "val_mae_rinci": {
-    "+15 menit": 0.2401,
-    "+30 menit": 0.399,
-    "+45 menit": 0.5782,
-    "+60 menit": 0.7744
+    "+15 menit": 0.2411,
+    "+30 menit": 0.3974,
+    "+45 menit": 0.5754,
+    "+60 menit": 0.7817
   },
   "val_mae_persistensi": 0.4765,
-  "val_skill": -0.045,
-  "val_mae_berubah": 2.0014,
+  "val_skill": -0.047,
+  "val_mae_berubah": 1.9894,
   "val_mae_persistensi_berubah": 2.0062,
   "val_n_berubah": 80
 }
